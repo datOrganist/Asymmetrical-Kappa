@@ -1,0 +1,31 @@
+asK2<- function(df){
+  #check if df is prop.table
+  if(sum(apply(df, 2, sum)) <= 1) 
+  {out <- data.frame(asymmetrical_Kappa=NA)
+  for(i in 1:ncol(df)){
+    #calculate partial result for rating-pair
+    temp <- (df[i,i]-(sum(df[i,])*sum(df[,i])))/(1- sum(df[,i]))
+    #bind partial result to df
+    out <- rbind(out,temp)
+  }
+  #sum up individual values and print asymmetrical Kappa value
+  print(colSums(out[1],na.rm = T))
+  #clean
+  rm(temp,out)
+  }
+  else 
+  {out <- data.frame(asymmetrical_Kappa=NA)
+  #transform to relative frequencies
+  temp_dat <- prop.table(df)
+  for(i in 1:ncol(temp_dat)){
+    #calculate partial result for rating-pair
+    temp <- (temp_dat[i,i]-(sum(temp_dat[i,])*sum(temp_dat[,i])))/(1- sum(temp_dat[,i]))
+    #bind partial result to df
+    out <- rbind(out,temp)
+  }
+  #sum up individual values and print asymmetrical Kappa value
+  print(colSums(out[1],na.rm = T))
+  #clean
+  rm(temp,out, temp_dat)
+  }
+}
